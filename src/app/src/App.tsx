@@ -4,8 +4,8 @@ import TickerInput, { validationStateTypes } from "./components/TickerInput";
 import DateInput from "./components/DateInput";
 import { useState } from "react";
 import { addDays } from "@fluentui/react-datepicker-compat";
-import { getTickerInfo } from "./utils/api";
-import { toBrowserTime } from "./utils/datetime";
+import { getTickerInfo, getPerformance } from "./utils/api";
+import { toBrowserTime, toServerTime } from "./utils/datetime";
 
 type validationInfoType = {
   ticker: string;
@@ -79,7 +79,7 @@ function App() {
             placeholder="Enter a ticker (compatible with Yahoo Finance)"
           />
         </div>
-        <div className="flex items-center pt-2">
+        <div className="flex items-center align-w-input">
           <Button
             onClick={() => {
               if (ticker !== "") {
@@ -127,7 +127,7 @@ function App() {
             />
           </div>
         </div>
-        <div className="flex items-center pt-2">
+        <div className="flex items-center align-w-input">
           <Button
             appearance="primary"
             disabled={
@@ -136,6 +136,14 @@ function App() {
                 validationInfo.validationState === "success"
               )
             }
+            onClick={async () => {
+              const response = await getPerformance(
+                ticker,
+                toServerTime(dateInfo.startDate),
+                toServerTime(dateInfo.endDate)
+              );
+              console.log(response);
+            }}
           >
             Backtest
           </Button>

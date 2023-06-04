@@ -3,7 +3,7 @@ export const toBrowserTime = (date: string): Date => {
   return new Date(date);
 };
 
-export const toServerTime = (date: Date): string => {
+export const toServerTime = (date: Date): Date => {
   const regex = /GMT.*/gi;
-  return date.toString().replaceAll(regex, "GMT");
+  return new Date(date.toString().replaceAll(regex, "GMT"));
 };
