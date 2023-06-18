@@ -1,9 +1,10 @@
-from flask import Flask, request
-import tensorflow as tf
-from data import RNNPredictor
-import yfinance as yf
-import requests
 import datetime as dt
+
+import requests
+import tensorflow as tf
+import yfinance as yf
+from data import RNNPredictor
+from flask import Flask, request
 
 app = Flask(__name__)
 
@@ -20,7 +21,6 @@ def validate_ticker(ticker):
         return False
 
     required_keys = {
-        "currentPrice",
         "regularMarketPreviousClose",
         "previousClose",
         "symbol",
@@ -61,19 +61,19 @@ def get_performance(ticker):
     end_date = request.args.get("endDate")
 
     if start_date is None or end_date is None or not validate_ticker(ticker):
-        return {"success": False}, 400
+        return {"success": False, "ticker": ticker}, 400
 
     try:
         start_date = dt.datetime.fromtimestamp(int(start_date), tz=dt.timezone.utc)
         end_date = dt.datetime.fromtimestamp(int(end_date), tz=dt.timezone.utc)
     except (ValueError, OSError):
-        return {"success": False}, 400
+        return {"success": False, "ticker": ticker}, 400
 
     predictor: RNNPredictor = predictors[ticker]
 
     if start_date < predictor.min_date or end_date > predictor.max_date:
-        return {"success": False}, 400
+        return {"success": False, "ticker": ticker}, 400
 
     result = predictor.predict(start_date, end_date)
 
-    return {"success": True, "result": result}
+    return {"success": True, "ticker": ticker, "result": result}

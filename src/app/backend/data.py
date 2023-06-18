@@ -1,11 +1,12 @@
-import yfinance as yf
+import datetime
+from collections import deque
+
 import numpy as np
+import pandas as pd
+import tensorflow as tf
+import yfinance as yf
 from sklearn import preprocessing
 from ta.momentum import RSIIndicator
-from collections import deque
-import tensorflow as tf
-import datetime
-import pandas as pd
 
 
 class RNNPredictor:
@@ -51,6 +52,8 @@ class RNNPredictor:
             self.IMPLIED_CLOSE_CHANGE_COL: "implied",
         }
         date_col = "date"
+        implied_total_col = "impliedTotal"
+        change_total_col = "changeTotal"
 
         results = self.results.copy()
         results.index = pd.to_datetime(results.index, utc=True)
@@ -65,6 +68,19 @@ class RNNPredictor:
         results[date_col] = pd.to_datetime(results[date_col]).apply(
             lambda x: x.date().strftime(date_fmt)
         )
+
+        # Set implied_total_col and change_total_col to a percentage change in
+        # value in the range of -100% to infinity%
+        results[implied_total_col] = (
+            (results[self.IMPLIED_CLOSE_CHANGE_COL] + 1).cumprod() - 1
+        ) * 100
+        results[change_total_col] = (
+            (results[self.CLOSE_CHANGE_COL] + 1).cumprod() - 1
+        ) * 100
+
+        # Convert the change columns to percentage values
+        results[self.CLOSE_CHANGE_COL] *= 100
+        results[self.IMPLIED_CLOSE_CHANGE_COL] *= 100
 
         # Rename the columns to be more concise
         results: pd.DataFrame = results.rename(columns=col_name_map)
