@@ -163,14 +163,9 @@ function App() {
                       toServerTime(dateInfo.endDate)
                     );
                     if (response.success) {
-                      console.log("YESS!");
-                      console.log(response);
                       const result: performanceDataType[] = response.result;
                       setPerformanceData(reduceArray(result, 1000));
-                      console.log(reduceArray(result, 1000));
                       setChosenTicker(ticker);
-                    } else {
-                      console.log("NOO");
                     }
                   }}
                 >
