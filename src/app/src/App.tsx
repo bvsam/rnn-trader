@@ -39,12 +39,12 @@ function App() {
   });
   // Ticker input state
   const [ticker, setTicker] = useState("");
-  const [chosenTicker, setChosenTicker] = useState(ticker);
   const [validationInfo, setValidationInfo] = useState<validationInfoType>({
     ticker: "",
     validationState: "none",
   });
   // Performance data state
+  const [chosenTicker, setChosenTicker] = useState(ticker);
   const [performanceData, setPerformanceData] = useState<
     performanceDataType[] | undefined
   >(undefined);
@@ -208,7 +208,7 @@ function App() {
                 </p>
                 <div className="my-3">
                   <h5 className="text-base text-center font-bold underline">
-                    Total Returns:
+                    Total Returns
                   </h5>
                   <div className="flex justify-evenly">
                     <div className="font-bold">
