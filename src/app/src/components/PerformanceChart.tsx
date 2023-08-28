@@ -51,6 +51,7 @@ export default function PerformanceChart({
             xScale={{ type: "band" }}
             yScale={{ type: "linear" }}
           >
+            {/* X and Y axes */}
             <AnimatedAxis
               orientation="left"
               label="Total Return"
@@ -75,6 +76,7 @@ export default function PerformanceChart({
               strokeWidth={1}
             />
             <AnimatedGrid columns={false} numTicks={4} />
+            {/* Main line series with ticker and backtested LSTM performance data */}
             <AnimatedLineSeries
               dataKey="defaultStrat"
               data={perfData}
@@ -85,6 +87,7 @@ export default function PerformanceChart({
               data={perfData}
               {...tradingStratAccessors}
             />
+            {/* Tooltip */}
             <Tooltip<performanceDataType>
               showVerticalCrosshair
               showSeriesGlyphs

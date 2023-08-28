@@ -85,6 +85,7 @@ function App() {
     <FluentProvider theme={darkMode ? webDarkTheme : webLightTheme}>
       <div className="flex flex-col min-h-screen">
         <div className="grow px-5 py-10">
+          {/* Backtester input and controls */}
           <div>
             <div className="mb-4">
               <h1 className="text-3xl font-bold">
@@ -189,7 +190,7 @@ function App() {
               </div>
             </div>
           </div>
-
+          {/* Backtest performance results */}
           <hr className="my-5" />
           {performanceData && (
             <div className="flex flex-col h-[55rem]">
@@ -260,6 +261,7 @@ function App() {
             </div>
           )}
         </div>
+        {/* Footer */}
         <div className="flex-none py-2 px-5">
           <hr className="my-5" />
           <Button onClick={() => setDarkMode(!darkMode)}>
