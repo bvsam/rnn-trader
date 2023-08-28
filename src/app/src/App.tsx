@@ -19,14 +19,17 @@ type validationInfoType = {
   ticker: string;
   validationState: validationStateTypes;
 };
-type dateInfoType = {
+type dateRangeType = {
   startDate: Date;
   endDate: Date;
+};
+type dateInfoType = dateRangeType & {
   minDate: Date;
   maxDate: Date;
 };
 
 function App() {
+  // Date input state
   const startDate = new Date(new Date().setHours(0, 0, 0, 0));
   const [dateInfo, setDateInfo] = useState<dateInfoType>({
     startDate: startDate,
@@ -34,17 +37,24 @@ function App() {
     minDate: addDays(startDate, -1),
     maxDate: addDays(startDate, 2),
   });
+  // Ticker input state
   const [ticker, setTicker] = useState("");
   const [chosenTicker, setChosenTicker] = useState(ticker);
   const [validationInfo, setValidationInfo] = useState<validationInfoType>({
     ticker: "",
     validationState: "none",
   });
+  // Performance data state
   const [performanceData, setPerformanceData] = useState<
     performanceDataType[] | undefined
   >(undefined);
+  const [perfDates, setPerfDates] = useState<dateRangeType | undefined>(
+    undefined
+  );
+  // Page state
   const [darkMode, setDarkMode] = useState(false);
 
+  // Functions and constants
   const determineValidationState = async (newTicker: string) => {
     switch (newTicker) {
       case "":
@@ -157,6 +167,10 @@ function App() {
                     )
                   }
                   onClick={async () => {
+                    const requestDates = {
+                      startDate: dateInfo.startDate,
+                      endDate: dateInfo.endDate,
+                    };
                     const response = await getPerformance(
                       ticker,
                       toServerTime(dateInfo.startDate),
@@ -166,6 +180,7 @@ function App() {
                       const result: performanceDataType[] = response.result;
                       setPerformanceData(reduceArray(result, 1000));
                       setChosenTicker(ticker);
+                      setPerfDates(requestDates);
                     }
                   }}
                 >
@@ -185,11 +200,11 @@ function App() {
                 </p>
                 <p>
                   <span className="underline">Start Date:</span>{" "}
-                  {dateInfo.minDate.toDateString()}
+                  {perfDates?.startDate.toDateString()}
                 </p>
                 <p>
                   <span className="underline">End Date:</span>{" "}
-                  {dateInfo.maxDate.toDateString()}
+                  {perfDates?.endDate.toDateString()}
                 </p>
                 <div className="my-3">
                   <h5 className="text-base text-center font-bold underline">
