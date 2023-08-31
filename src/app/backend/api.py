@@ -1,4 +1,6 @@
 import datetime as dt
+import os
+import pathlib
 
 import requests
 import tensorflow as tf
@@ -8,7 +10,8 @@ from flask import Flask, request
 
 app = Flask(__name__)
 
-model = tf.keras.models.load_model("../../model/models/SPY")
+model_path = os.path.join(pathlib.Path(__file__).parents[2], "model/models/SPY")
+model = tf.keras.models.load_model(model_path)
 predictors = {}
 invalid = set()
 
@@ -77,3 +80,7 @@ def get_performance(ticker):
     result = predictor.predict(start_date, end_date)
 
     return {"success": True, "ticker": ticker, "result": result}
+
+
+if __name__ == "__main__":
+    app.run()
