@@ -33,7 +33,7 @@ def validate_ticker(ticker):
 
     valid = required_keys.issubset(info.keys())
     if valid:
-        predictor = RNNPredictor(ticker, model)
+        predictor = RNNPredictor(ticker, model, 60, 20)
         predictors[ticker] = predictor
     else:
         invalid.add(ticker)

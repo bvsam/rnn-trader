@@ -10,15 +10,29 @@ from ta.momentum import RSIIndicator
 
 
 class RNNPredictor:
-    # Length of sequences to feed the RNN
-    SEQUENCE_LEN = 60
-    # Number of periods (days if data is daily) in the future to predict
-    PREDICTION_PERIOD_OFFSET = 20
-
     RELEVANT_COLS = ["Close"]
     INDICATOR_TICKERS = ["QQQ", "^TNX", "^VIX", "CL=F"]
 
-    def __init__(self, ticker: str, model) -> None:
+    def __init__(
+        self,
+        ticker: str,
+        model,
+        sequence_len: int,
+        prediction_period_offset: int,
+    ) -> None:
+        """
+        :param ticker: A string representing a yahoo finance API compatible
+            ticker.
+        :param model: A Keras model.
+        :param sequence_len: The length of sequences to feed the model. This
+            parameter is dependent on the `model` parameter and depends on the
+            model's architecture.
+        :param prediction_period_offset: The number of periods (days if data is
+            daily) in the future to predict from the end of the data provided
+            by sequences fed into the model as input. This parameter is
+            dependent on the `model` parameter and depends on the model's
+            architecture.
+        """
         self.TICKER = ticker
         self.MODEL = model
         self.CLOSE_COL = f"{self.TICKER}_Close"
@@ -27,6 +41,8 @@ class RNNPredictor:
         self.CLOSE_CHANGE_COL = f"{self.CLOSE_COL}_Change"
         self.IMPLIED_CLOSE_CHANGE_COL = f"{self.CLOSE_CHANGE_COL}_Implied"
         self.PREDICTION_COL = "Prediction"
+        self.SEQUENCE_LEN = sequence_len
+        self.PREDICTION_PERIOD_OFFSET = prediction_period_offset
         self.update()
 
     def update(self) -> None:
