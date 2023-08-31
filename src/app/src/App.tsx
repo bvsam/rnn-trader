@@ -4,6 +4,7 @@ import {
   FluentProvider,
   webLightTheme,
   webDarkTheme,
+  Spinner,
 } from "@fluentui/react-components";
 import TickerInput, { validationStateTypes } from "./components/TickerInput";
 import DateInput from "./components/DateInput";
@@ -53,6 +54,7 @@ function App() {
   );
   // Page state
   const [darkMode, setDarkMode] = useState(false);
+  const [spinnerActive, setSpinnerActive] = useState(false);
 
   // Functions and constants
   const determineValidationState = async (newTicker: string) => {
@@ -61,7 +63,9 @@ function App() {
         setValidationInfo({ ticker: newTicker, validationState: "none" });
         break;
       default: {
+        setSpinnerActive(true);
         const response = await getTickerInfo(newTicker);
+        setSpinnerActive(false);
         if (response.ticker === newTicker && response.exists) {
           setValidationInfo({ ticker: newTicker, validationState: "success" });
           const newMinDate = toBrowserTime(response.minDate);
@@ -188,6 +192,7 @@ function App() {
                   Backtest
                 </Button>
               </div>
+              {spinnerActive && <Spinner size="small" />}
             </div>
           </div>
           {/* Backtest performance results */}
