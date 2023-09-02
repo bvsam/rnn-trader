@@ -256,7 +256,7 @@ function App() {
               </div>
               <div className="grow p-4">
                 <PerformanceChart
-                  ticker={ticker}
+                  ticker={chosenTicker}
                   perfData={performanceData}
                   widthPct={80}
                   roundingDigits={roundingDigits}
