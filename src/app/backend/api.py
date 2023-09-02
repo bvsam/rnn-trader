@@ -1,4 +1,5 @@
 import datetime as dt
+import json
 import os
 import pathlib
 
@@ -10,8 +11,15 @@ from flask import Flask, request
 
 app = Flask(__name__)
 
-model_path = os.path.join(pathlib.Path(__file__).parents[2], "model/models/SPY")
-model = tf.keras.models.load_model(model_path)
+with open("model-info.json") as f:
+    model_info = json.load(f)
+MODEL_NAME = "SPY_lg_20230830"
+MODEL_PATH = model_info[MODEL_NAME]["path"]
+MODEL_SEQUENCE_LEN = model_info[MODEL_NAME]["sequence_len"]
+MODEL_PREDICTION_PERIOD_OFFSET = model_info[MODEL_NAME]["prediction_period_offset"]
+
+model_full_path = os.path.join(pathlib.Path(__file__).parents[2], MODEL_PATH)
+model = tf.keras.models.load_model(model_full_path)
 predictors = {}
 invalid = set()
 
@@ -36,7 +44,9 @@ def validate_ticker(ticker):
 
     valid = required_keys.issubset(info.keys())
     if valid:
-        predictor = RNNPredictor(ticker, model, 60, 20)
+        predictor = RNNPredictor(
+            ticker, model, MODEL_SEQUENCE_LEN, MODEL_PREDICTION_PERIOD_OFFSET
+        )
         predictors[ticker] = predictor
     else:
         invalid.add(ticker)

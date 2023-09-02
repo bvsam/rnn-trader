@@ -1,0 +1,17 @@
+{
+  "SPY": {
+    "path": "model/models/SPY",
+    "sequence_len": 60,
+    "prediction_period_offset": 20
+  },
+  "SPY_lg_20211231": {
+    "path": "model/models/SPY_lg_20211231",
+    "sequence_len": 250,
+    "prediction_period_offset": 20
+  },
+  "SPY_lg_20230830": {
+    "path": "model/models/SPY_lg_20230830",
+    "sequence_len": 250,
+    "prediction_period_offset": 20
+  }
+}
