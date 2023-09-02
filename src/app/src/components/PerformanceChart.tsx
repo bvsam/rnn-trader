@@ -21,12 +21,12 @@ type PerformanceChartProps = {
   darkMode?: boolean;
 };
 
-const defaultStratAccessors = {
+const defaultStrategyAccessors = {
   xAccessor: (d: performanceDataType) => d.date,
   yAccessor: (d: performanceDataType) => d.changeTotal,
 };
 
-const tradingStratAccessors = {
+const tradingStrategyAccessors = {
   xAccessor: (d: performanceDataType) => d.date,
   yAccessor: (d: performanceDataType) => d.impliedTotal,
 };
@@ -107,12 +107,12 @@ export default function PerformanceChart({
               <AnimatedLineSeries
                 dataKey={ticker}
                 data={perfData}
-                {...defaultStratAccessors}
+                {...defaultStrategyAccessors}
               />
               <AnimatedLineSeries
                 dataKey="LSTM Bot"
                 data={perfData}
-                {...tradingStratAccessors}
+                {...tradingStrategyAccessors}
               />
 
               {/* Tooltip */}
@@ -124,28 +124,28 @@ export default function PerformanceChart({
                     return null;
                   }
 
-                  const date = defaultStratAccessors.xAccessor(
+                  const date = defaultStrategyAccessors.xAccessor(
                     tooltipData.nearestDatum.datum
                   );
 
-                  const tradingStratReturn = round(
-                    tradingStratAccessors.yAccessor(
+                  const tradingStrategyReturn = round(
+                    tradingStrategyAccessors.yAccessor(
                       tooltipData.datumByKey["LSTM Bot"].datum
                     ),
                     roundingDigits
                   );
-                  const tradingStratChange = round(
+                  const tradingStrategyChange = round(
                     tooltipData.datumByKey["LSTM Bot"].datum.change,
                     roundingDigits
                   );
 
-                  const defaultStratReturn = round(
-                    defaultStratAccessors.yAccessor(
+                  const defaultStrategyReturn = round(
+                    defaultStrategyAccessors.yAccessor(
                       tooltipData.datumByKey[ticker].datum
                     ),
                     roundingDigits
                   );
-                  const defaultStratChange = round(
+                  const defaultStrategyChange = round(
                     tooltipData.datumByKey[ticker].datum.implied,
                     roundingDigits
                   );
@@ -159,11 +159,15 @@ export default function PerformanceChart({
                         }}
                       >
                         {ticker}:{" "}
-                        <span style={colouredReturnValue(defaultStratReturn)}>
-                          {defaultStratReturn}%
+                        <span
+                          style={colouredReturnValue(defaultStrategyReturn)}
+                        >
+                          {defaultStrategyReturn}%
                         </span>{" "}
-                        <span style={colouredReturnValue(tradingStratChange)}>
-                          ({tradingStratChange}%)
+                        <span
+                          style={colouredReturnValue(tradingStrategyChange)}
+                        >
+                          ({tradingStrategyChange}%)
                         </span>
                       </p>
                       <p
@@ -174,11 +178,15 @@ export default function PerformanceChart({
                         }}
                       >
                         LSTM Bot:{" "}
-                        <span style={colouredReturnValue(tradingStratReturn)}>
-                          {tradingStratReturn}%
+                        <span
+                          style={colouredReturnValue(tradingStrategyReturn)}
+                        >
+                          {tradingStrategyReturn}%
                         </span>{" "}
-                        <span style={colouredReturnValue(defaultStratChange)}>
-                          ({defaultStratChange}%)
+                        <span
+                          style={colouredReturnValue(defaultStrategyChange)}
+                        >
+                          ({defaultStrategyChange}%)
                         </span>
                       </p>
                     </div>
