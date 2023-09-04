@@ -1,3 +1,4 @@
+import configparser
 import datetime as dt
 import json
 import os
@@ -11,9 +12,14 @@ from flask import Flask, request
 
 app = Flask(__name__)
 
-with open("model-info.json") as f:
+CONFIG_NAME = "config.ini"
+config = configparser.ConfigParser()
+config.read(CONFIG_NAME)
+
+with open(config["Model_Info"]["MODEL_INFO_FILE"]) as f:
     model_info = json.load(f)
-MODEL_NAME = "SPY_lg_20230830"
+
+MODEL_NAME = config["Model_Info"]["MODEL_NAME"]
 MODEL_PATH = model_info[MODEL_NAME]["path"]
 MODEL_SEQUENCE_LEN = model_info[MODEL_NAME]["sequence_len"]
 MODEL_PREDICTION_PERIOD_OFFSET = model_info[MODEL_NAME]["prediction_period_offset"]
