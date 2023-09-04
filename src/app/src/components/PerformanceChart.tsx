@@ -45,7 +45,6 @@ const ChartLegend = () => {
         marginTop: margin.top + 35,
         marginRight: innerWidth - 220,
         border: "1px solid",
-        borderRadius: "8px",
         padding: 10,
         fontWeight: "bold",
       }}
