@@ -20,16 +20,11 @@ npm install
 ```
 
 2. _(Optional)_ Specify the name of the model you would like to use with the `MODEL_NAME` key in `src/app/backend/config.ini`. Valid model names are listed as keys in `src/app/backend/model-info.json`.
-3. Run the app (both the Vite frontend and the Flask API).
+3. Run the app (both the Vite frontend and the Flask API with concurrently).
 
 ```
 cd src/app/
 npm run dev
-
-# In a separate terminal, run the following
-
-cd src/app/
-npm run api
 ```
 
 ### Tips for Running
