@@ -24,7 +24,7 @@ npm install
 
 ```
 cd src/app/
-npm run dev
+npm run app
 ```
 
 ### Tips for Running
