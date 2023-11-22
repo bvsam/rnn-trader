@@ -29,7 +29,9 @@ npm run dev
 
 ### Tips for Running
 
-- If the api fails to validate basic tickers properly (e.g. AAPL), then you may have to upgrade `yfinance` to the latest version (using `pip install -U yfinance`).
+- If the api fails to validate basic tickers properly (e.g. AAPL), then one of the following may be true
+  - the Yahoo Finance API that `yfinance` package is accessing may be temporarily down. This can be resolved by trying later
+  - you may have to upgrade `yfinance` to the latest version (using `pip install -U yfinance`).
 - Additionally, the api might be overly strict as to what qualifies as a valid ticker. Change the dict keys checked for in `src/app/backend/api.py` if this is the case (set `required_keys` in function `validate_ticker`).
 
 ## Model Zoo

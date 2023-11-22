@@ -3,6 +3,7 @@ import datetime as dt
 import json
 import os
 import pathlib
+import sys
 
 import requests
 import tensorflow as tf
@@ -30,6 +31,13 @@ predictors = {}
 invalid = set()
 
 
+def eprint(*args, **kwargs):
+    """
+    Helper function to allow for error messages to be easily printed to stderr
+    """
+    print(*args, file=sys.stderr, **kwargs)
+
+
 def validate_ticker(ticker):
     if ticker in predictors:
         return True
@@ -43,11 +51,8 @@ def validate_ticker(ticker):
         "symbol",
         "underlyingSymbol",
     }
-    try:
-        info = yf.Ticker(ticker).info
-    except requests.exceptions.HTTPError:
-        return False
 
+    info = yf.Ticker(ticker).info
     valid = required_keys.issubset(info.keys())
     if valid:
         predictor = RNNPredictor(
@@ -62,7 +67,13 @@ def validate_ticker(ticker):
 
 @app.route("/info/<ticker>")
 def get_ticker_info(ticker):
-    if not validate_ticker(ticker):
+    try:
+        valid = validate_ticker(ticker)
+    except requests.exceptions.HTTPError as e:
+        eprint(f"Server Error: {e}")
+        return {"ticker": ticker, "exists": False}, 500
+
+    if not valid:
         return {"ticker": ticker, "exists": False}, 400
     predictor = predictors[ticker]
 
@@ -79,7 +90,13 @@ def get_performance(ticker):
     start_date = request.args.get("startDate")
     end_date = request.args.get("endDate")
 
-    if start_date is None or end_date is None or not validate_ticker(ticker):
+    try:
+        valid = validate_ticker(ticker)
+    except requests.exceptions.HTTPError as e:
+        eprint(f"Server Error: {e}")
+        return {"success": False, "ticker": ticker}, 500
+
+    if start_date is None or end_date is None or not valid:
         return {"success": False, "ticker": ticker}, 400
 
     try:
